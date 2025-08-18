@@ -1,4 +1,5 @@
 const Product = require("./models");
+const User = require("../Users/models");
 
 const getAll = async (req, res) => {
   try {
@@ -17,23 +18,30 @@ const getAll = async (req, res) => {
   }
 };
 
+
 const getOne = async (req, res) => {
   try {
-    const id = req.params["id"];
-    const Product = await Product.findOne({ _id: id });
-    if (!Product) return res.json({ msg: "Product not found" });
-    return res.status(200).json({ data: Product });
+    const id = req.params.id;
+    const product = await Product.findById(id);
+    if (!product) return res.status(404).json({ msg: "Product not found" });
+    return res.status(200).json({ data: product });
   } catch (error) {
     return res.status(500).json({
       msg: "Internal Server Error",
-      error: error,
+      error: error.message,
     });
   }
 };
-
-
 const createOne = async (req, res) => {
   try {
+    console.log("req.body:", req.body);
+    console.log("req file:", req.file);
+
+    const user_id = req.user.id;
+    // console.log(user_id);
+
+    const user = await User.findById(user_id);
+
     const { products, price, desc, category, brand, instock, discount } =
       req.body;
 
@@ -48,12 +56,14 @@ const createOne = async (req, res) => {
       desc,
       category,
       brand,
-      instock, // Optional (default is true in schema)
-      discount, // Optional (default is 1 in schema)
+      instock,
+      discount,
+      user:user_id
     });
 
     res.status(201).json({ msg: "Product created", data: product });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
       msg: "Internal Server Error",
       error: error.message,
