@@ -3,7 +3,7 @@ const User = require("../Users/models");
 
 const getAll = async (req, res) => {
   try {
-    const products = await Product.find();
+    const products = await Product.find().populate("user", "name email"); 
     console.log(req.cookies.count);
 
     return res.status(200).json({
@@ -22,7 +22,8 @@ const getAll = async (req, res) => {
 const getOne = async (req, res) => {
   try {
     const id = req.params.id;
-    const product = await Product.findById(id);
+    const product = await Product.findById(id)
+       .populate("user", "name email"); 
     if (!product) return res.status(404).json({ msg: "Product not found" });
     return res.status(200).json({ data: product });
   } catch (error) {
@@ -60,6 +61,8 @@ const createOne = async (req, res) => {
       discount,
       user:user_id
     });
+    User.product.push(product._id)
+    await user.save()
 
     res.status(201).json({ msg: "Product created", data: product });
   } catch (error) {
@@ -81,12 +84,12 @@ const updateOne = async (req, res) => {
     if (!products || !price || !category || !instock)
       return res.status(400).json({ msg: "data required!!" });
 
-    await user.findOneAndUpdate(
+    await Product.findOneAndUpdate(
       { _id: id },
       { products, price, desc, category, brand, discount, instock }
     );
 
-    res.json({ msg: "user updated successfully!" });
+    res.json({ msg: "Product updated successfully!" });
   } catch (error) {
     return res.status(500).json({
       msg: "Server Not Found",

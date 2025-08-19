@@ -1,6 +1,7 @@
 const express = require("express");
 const products = require("./controllers");
 const { isAuth } = require("../auth/middleware");
+const upload = require("../config/multerconfig");
 
 const routes = express.Router();
 
@@ -11,7 +12,12 @@ routes.get("/getall_products", products.getAll);
 routes.get("/getone/:id", products.getOne);
 
 //3.create-
-routes.post("/create_product",  isAuth  ,products.createOne);
+routes.post(
+  "/create_product",
+  isAuth,
+  upload.single("image"),
+  products.createOne
+);
 
 //4. update-
 routes.put("/update_product/:index", products.updateOne);

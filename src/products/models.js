@@ -11,6 +11,7 @@ const productschema = new mongoose.Schema({
   instock: { type: Boolean, default: true },
   discount: { type: Number, default: 1 },
   user: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
+  
 });
 
 const Products = mongoose.model("product", productschema);
