@@ -20,9 +20,9 @@ routes.post(
 );
 
 //4. update-
-routes.put("/update_product/:index", products.updateOne);
+routes.put("/update_product/:id", upload.single("image"), products.updateOne);
 
 //5. delete-
-routes.delete("/delete_product", products.deleteOne);
+routes.delete("/delete_product/:id", products.deleteOne);
 
 module.exports = routes;

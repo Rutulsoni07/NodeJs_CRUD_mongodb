@@ -11,9 +11,11 @@ const productschema = new mongoose.Schema({
   instock: { type: Boolean, default: true },
   discount: { type: Number, default: 1 },
   user: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
+  image:{type:String}
   
 });
 
-const Products = mongoose.model("product", productschema);
+const Products = mongoose.model("Product", productschema);
 
 module.exports = Products;
+
